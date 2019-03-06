@@ -56,22 +56,22 @@ string env_path="env";
 mkdir(env_path.c_str(),ACCESSPERMS); // create folder with env label to store generated trajectories
 
 int main () {
-    
+
     double nodes[size][2]; // nodes from obstacle-free space that will become random start-goal pairs
 
     srand (time(0));
-    
-  
+
+
     /*
 	//-In order to generate random environments, we randomly sample 20 obstacles locations in the workspace, as follow:
 	//-Orignal workspace is 40X40 but we sample locations from 30X30 space in order to avoid obstacles going out of workspace boundry.
-	////////////////////////////////////////////////////// 
+	//////////////////////////////////////////////////////
 	double obst[20][2];
-    for (int i=0;i<20;i++)
+    for (int i=0;i<20;i++).......................
     for (int j = 0; j < 2; j++)
-	     obst[i][j] = (double)rand()/(RAND_MAX + 1.0)*30.0 
+	     obst[i][j] = (double)rand()/(RAND_MAX + 1.0)*30.0
         - 15.0 + 0.0;
-         
+
     ofstream out("obs.dat", ios::out | ios::binary);
           if(!out) {
                         cout << "Cannot open file.";
@@ -82,7 +82,7 @@ int main () {
           out.close();
 	//////////////////////////////////////////////////
     */
-    // load obstacle locations 
+    // load obstacle locations
     double fnum[20][2];
     ifstream in("obs.dat", ios::in | ios::binary);
     in.read((char *) &fnum, sizeof fnum);
@@ -90,11 +90,11 @@ int main () {
     int perm[77520][7];
     ifstream in2("obs_perm2.dat", ios::in | ios::binary);
     in2.read((char *) &perm, sizeof perm);
-    
+
     //start and goal region
-   
-    
-   
+
+
+
    int i=0;
    for (i=0;i<1;i++){
     	string env_no;          // string which will contain the result
@@ -104,28 +104,28 @@ int main () {
     	string path="env/e"+env_no;
     	mkdir(path.c_str(),ACCESSPERMS); // create folder with env label to store generated trajectories
 		/*
-		We also generted a random set of nodes from obstacle-free space, denoted as graph. These nodes are used as start and goal pairs 
+		We also generted a random set of nodes from obstacle-free space, denoted as graph. These nodes are used as start and goal pairs
 		*/
 		double fnum2[50000][2];
 		path="graph/graph"+env_no+".dat";
 	    ifstream in3(path.c_str(), ios::in | ios::binary);
 	    in3.read((char *) &fnum2, sizeof fnum2);
 	    int t=0;
-  		for (int t=0;t<100;t++){  
-			cout<<"t"<<t<<endl;  
-			 
+  		for (int t=0;t<100;t++){
+			cout<<"t"<<t<<endl;
+
 			planner_t rrts;
-		
+
 			cout << "RRTstar is alive" << endl;
-		
-		
+
+
 			// Get lcm
 			lcm_t *lcm = bot_lcm_get_global (NULL);
-				
-		
+
+
 			// Create the dynamical system
 			System system;
-		
+
 			// Three dimensional configuration space
 			system.setNumDimensions (2);
 			// Define the operating region
@@ -136,7 +136,7 @@ int main () {
 			system.regionOperating.size[0] = 40.0;
 			system.regionOperating.size[1] = 40.0;
 			system.regionOperating.size[2] = 0.0;
-			// Define the goal region		
+			// Define the goal region
 			system.regionGoal.setNumDimensions(2);
 			system.regionGoal.center[0] =fnum2[t][0];
 			system.regionGoal.center[1] =fnum2[t][1];
@@ -146,14 +146,14 @@ int main () {
 			system.regionGoal.size[2] = 0.0;
 		    region *obstacle,*obstacle1,*obstacle2,*obstacle3,*obstacle4,*obstacle5,*obstacle6;
 		    obstacle = new region;
-		    obstacle1 = new region;  
-		    obstacle2 = new region;  
+		    obstacle1 = new region;
+		    obstacle2 = new region;
 		    obstacle3=new region;
 		    obstacle4=new region;
 		    obstacle5=new region;
 		    obstacle6=new region;
 
- 
+
 			obstacle->setNumDimensions(2);
 			obstacle->center[0] =fnum[perm[i][0]][0];
 			obstacle->center[1] = fnum[perm[i][0]][1];
@@ -161,7 +161,7 @@ int main () {
 			obstacle->size[0] = 5.0;
 			obstacle->size[1] = 5.0;
 			obstacle->size[2] = 0.0;
-		 
+
 			obstacle1->setNumDimensions(2);
 			obstacle1->center[0] = fnum[perm[i][1]][0];
 			obstacle1->center[1] = fnum[perm[i][1]][1];
@@ -177,7 +177,7 @@ int main () {
 			obstacle2->size[0] = 5.0;
 			obstacle2->size[1] = 5.0;
 			obstacle2->size[2] = 0.0;
-		
+
 			obstacle3->setNumDimensions(2);
 			obstacle3->center[0] = fnum[perm[i][3]][0];
 			obstacle3->center[1] = fnum[perm[i][3]][1];
@@ -185,7 +185,7 @@ int main () {
 			obstacle3->size[0] = 5.0;
 			obstacle3->size[1] = 5.0;
 			obstacle3->size[2] = 0.0;
-		
+
 			obstacle4->setNumDimensions(2);
 			obstacle4->center[0] = fnum[perm[i][4]][0];
 			obstacle4->center[1] = fnum[perm[i][4]][1];
@@ -201,8 +201,8 @@ int main () {
 			obstacle5->size[0] = 5.0;
 			obstacle5->size[1] = 5.0;
 			obstacle5->size[2] = 0.0;
-		
-		
+
+
 			obstacle6->setNumDimensions(2);
 			obstacle6->center[0] = fnum[perm[i][6]][0];
 			obstacle6->center[1] = fnum[perm[i][6]][1];
@@ -210,9 +210,9 @@ int main () {
 			obstacle6->size[0] = 5.0;
 			obstacle6->size[1] = 5.0;
 			obstacle6->size[2] = 0.0;
-    
 
-                                        
+
+
 			system.obstacles.push_front(obstacle);  // Add the obstacle to the list
 			system.obstacles.push_front(obstacle1);  // Add the obstacle to the list
 			system.obstacles.push_front(obstacle2);  // Add the obstacle to the list
@@ -226,25 +226,25 @@ int main () {
 			rrts.setSystem (system);
 			//publishEnvironment (lcm);
 			// Set up the root vertex
-			vertex_t &root = rrts.getRootVertex();  
+			vertex_t &root = rrts.getRootVertex();
 			State &rootState = root.getState();
-			
-			// Define start state			
+
+			// Define start state
 			rootState[0] =fnum2[t+1][0];
 			rootState[1] =fnum2[t+1][1];
 			rootState[2] = 0.0;
- 
- 
+
+
 			// Initialize the planner
 			rrts.initialize ();
 
-			// This parameter should be larger than 1.5 for asymptotic 
-			//   optimality. Larger values will weigh on optimization 
-			//   rather than exploration in the RRT* algorithm. Lower 
+			// This parameter should be larger than 1.5 for asymptotic
+			//   optimality. Larger values will weigh on optimization
+			//   rather than exploration in the RRT* algorithm. Lower
 			//   values, such as 0.1, should recover the RRT.
 			rrts.setGamma (1.5);
 
-    
+
     		clock_t start = clock();
     		int j=0;
 			double node[2];
@@ -255,20 +255,20 @@ int main () {
 			  int s=0;
 			while(j<80000)
 				{
-			  
+
 						     rrts.iteration(node);
 						         j++;
 						      if (node[0]!=0 && node[1]!=0)
 						      {
-						         if(s<size){ 
+						         if(s<size){
 						          nodes[s][0]=node[0];
 						          nodes[s][1]=node[1];
 						          s++;}
-						      } 
-						         
-			}    
+						      }
 
-			 
+			}
+
+
 			cout<<"s:"<<s<<endl;
 			string env_no;          // string which will contain the result
 			ostringstream convert;   // stream used for the conversion
@@ -285,18 +285,18 @@ int main () {
 			*/
 
 
-		 
+
 		 // p-rrt* path generation
 		double cost=1000;
 		int k=0;
 		int c=0, cp=0;
 		for (int j=0;j<=100000;j+=2000){
-		
+
 			int limit= 5000+j;
 			//cout<<limit<<endl;
 			while(k<limit)
 			{
-				
+
 				rrts.iteration(node,-1,-1);
 			    k++;
 			}
@@ -310,8 +310,8 @@ int main () {
 				cp=c;
 			else
 				break;
-				  
-		
+
+
 		}
 
 		cout<<"iterations:"<<k<<endl;
@@ -322,14 +322,14 @@ int main () {
 		// Generate obstacle point cloud for each environment to train auto encoder.
 		/*
 		int s=0;
-		 double obcloud[1400][2]; 
+		 double obcloud[1400][2];
 			for (list<region*>::iterator iter = system.obstacles.begin(); iter != system.obstacles.end(); iter++){
-				
+
 				region* obstacleCurr = *iter;
-				
+
 				for (int i=s; i< (200+s); i++){
 				    for (int j = 0; j < system.getNumDimensions(); j++)
-					    obcloud[i][j] = (double)rand()/(RAND_MAX + 1.0)*obstacleCurr->size[j] 
+					    obcloud[i][j] = (double)rand()/(RAND_MAX + 1.0)*obstacleCurr->size[j]
 				- obstacleCurr->size[j]/2.0 + obstacleCurr->center[j];
 
 				}
@@ -337,7 +337,7 @@ int main () {
 				    s=s+200;
 				else
 				    break;
-			}       
+			}
 		 string Result;          // string which will contain the result
 		ostringstream convert;   // stream used for the conversion
 		convert << i;      // insert the textual representation of 'Number' in the characters in the stream
@@ -349,7 +349,7 @@ int main () {
 				        }
 
 				  out.write((char *) &obcloud, sizeof obcloud);
-				  out.close();  
+				  out.close();
 		 */
 
     	clock_t finish = clock();
@@ -359,20 +359,20 @@ int main () {
     	//publishTree (lcm, rrts, system);
     	// stores path in the folder env_no
     	publishTraj (lcm, rrts, system,t, env_no );
-    
-   
 
-   } } 
-      
+
+
+   } }
+
     return 1;
 }
 
 
 int publishEnvironment (lcm_t *lcm, region& regionOperating, region& regionGoal, list<region*>& obstacles) {
-    
+
     // Publish the environment
     lcmtypes_environment_t *environment = (lcmtypes_environment_t*) malloc (sizeof(lcmtypes_environment_t));
-    
+
     environment->operating.center[0] = regionOperating.center[0];
     environment->operating.center[1] = regionOperating.center[1];
     environment->operating.center[2] = regionOperating.center[2];
@@ -386,43 +386,43 @@ int publishEnvironment (lcm_t *lcm, region& regionOperating, region& regionGoal,
     environment->goal.size[0] = regionGoal.size[0];
     environment->goal.size[1] = regionGoal.size[1];
     environment->goal.size[2] = regionGoal.size[2];
-    
-    
+
+
     environment->num_obstacles = obstacles.size();
-    
-    if (environment->num_obstacles > 0) 
+
+    if (environment->num_obstacles > 0)
         environment->obstacles = (lcmtypes_region_3d_t *) malloc (sizeof(lcmtypes_region_3d_t));
-    
+
     int idx_obstacles = 0;
     for (list<region*>::iterator iter = obstacles.begin(); iter != obstacles.end(); iter++){
-        
+
         region* obstacleCurr = *iter;
-        
+
         environment->obstacles[idx_obstacles].center[0] = obstacleCurr->center[0];
         environment->obstacles[idx_obstacles].center[1] = obstacleCurr->center[1];
         environment->obstacles[idx_obstacles].center[2] = obstacleCurr->center[2];
         environment->obstacles[idx_obstacles].size[0] = obstacleCurr->size[0];
         environment->obstacles[idx_obstacles].size[1] = obstacleCurr->size[1];
         environment->obstacles[idx_obstacles].size[2] = obstacleCurr->size[2];
-        
+
         idx_obstacles++;
     }
-    
-    
+
+
     lcmtypes_environment_t_publish (lcm, "ENVIRONMENT", environment);
     lcmtypes_environment_t_destroy (environment);
-    
+
     return 1;
 }
 
 int publishTraj (lcm_t *lcm, planner_t& planner, System& system, int num, string fod) {
-    
-    
+
+
     cout << "Publishing trajectory -- start" << endl;
 
-    
+
     vertex_t& vertexBest = planner.getBestVertex ();
-    
+
     if (&vertexBest == NULL) {
         cout << "No best vertex" << endl;
         double path[1][2];
@@ -458,7 +458,7 @@ int publishTraj (lcm_t *lcm, planner_t& planner, System& system, int num, string
     int stateIndex = 0;
 
        for (list<double*>::iterator iter = stateList.begin(); iter != stateList.end(); iter++) {
-        
+
         double* stateRef = *iter;
         opttraj->states[stateIndex].x = stateRef[0];
         opttraj->states[stateIndex].y = stateRef[1];
@@ -480,10 +480,10 @@ int publishTraj (lcm_t *lcm, planner_t& planner, System& system, int num, string
             opttraj->states[stateIndex].z = stateRef[2];
         else
             opttraj->states[stateIndex].z = 0.0;
-        
+
 
         delete [] stateRef;
-        
+
         stateIndex++;
     }
   	string Result;          // string which will contain the result
@@ -499,112 +499,109 @@ int publishTraj (lcm_t *lcm, planner_t& planner, System& system, int num, string
 
     out.write((char *) &path, sizeof path);
   	out.close();
-    
+
     lcmtypes_trajectory_t_publish (lcm, "TRAJECTORY", opttraj);
-    
+
     lcmtypes_trajectory_t_destroy (opttraj);
-    
+
     cout << "Publishing trajectory -- end" << endl;
-    
-    
-    
+
+
+
     return 1;
 }
 
 
 int publishTree (lcm_t *lcm, planner_t& planner, System& system) {
-    
-    
+
+
     cout << "Publishing the tree -- start" << endl;
-    
+
     bool plot3d = (system.getNumDimensions() > 2);
-    
+
     lcmtypes_graph_t *graph = (lcmtypes_graph_t *) malloc (sizeof (lcmtypes_graph_t));
-    graph->num_vertices = planner.numVertices; 
+    graph->num_vertices = planner.numVertices;
     cout<<"num_Vertices: "<< graph->num_vertices<< endl;
-    
-    if (graph->num_vertices > 0) {    
-        
+
+    if (graph->num_vertices > 0) {
+
         graph->vertices = (lcmtypes_vertex_t *) malloc (graph->num_vertices * sizeof(lcmtypes_vertex_t));
-        
+
         int vertexIndex = 0;
         for (list<vertex_t*>::iterator iter = planner.listVertices.begin(); iter != planner.listVertices.end(); iter++) {
-            
-            
+
+
             vertex_t &vertexCurr = **iter;
             State &stateCurr = vertexCurr.getState ();
-            
+
             graph->vertices[vertexIndex].state.x = stateCurr[0];
             graph->vertices[vertexIndex].state.y = stateCurr[1];
-            if (plot3d){ 
+            if (plot3d){
                 graph->vertices[vertexIndex].state.z = stateCurr[2];
             }
-            else 
+            else
                 graph->vertices[vertexIndex].state.z = 0.0;
-            
+
             vertexIndex++;
-            
+
         }
     }
     else {
         graph->vertices = NULL;
     }
-    
+
     if (graph->num_vertices > 1) {
-        
+
         graph->num_edges = graph->num_vertices - 1;
         graph->edges = (lcmtypes_edge_t *) malloc (graph->num_edges * sizeof(lcmtypes_edge_t));
-        
-        
+
+
         int edgeIndex = 0;
         for (list<vertex_t*>::iterator iter = planner.listVertices.begin(); iter != planner.listVertices.end(); iter++) {
-            
+
             vertex_t &vertexCurr = **iter;
-            
+
             vertex_t &vertexParent = vertexCurr.getParent();
-            
-            if ( &vertexParent == NULL ) 
+
+            if ( &vertexParent == NULL )
                 continue;
-            
+
             State &stateCurr = vertexCurr.getState ();
             State &stateParent = vertexParent.getState();
-            
-            
+
+
             graph->edges[edgeIndex].vertex_src.state.x = stateParent[0];
             graph->edges[edgeIndex].vertex_src.state.y = stateParent[1];
             if (plot3d)
                 graph->edges[edgeIndex].vertex_src.state.z = stateParent[2];
-            else 
+            else
                 graph->edges[edgeIndex].vertex_src.state.z = 0.0;
-            
-            
+
+
             graph->edges[edgeIndex].vertex_dst.state.x = stateCurr[0];
             graph->edges[edgeIndex].vertex_dst.state.y = stateCurr[1];
             if (plot3d)
                 graph->edges[edgeIndex].vertex_dst.state.z = stateCurr[2];
-            else 
+            else
                 graph->edges[edgeIndex].vertex_dst.state.z = 0.0;
-            
+
             graph->edges[edgeIndex].trajectory.num_states = 0;
             graph->edges[edgeIndex].trajectory.states = NULL;
-            
+
             edgeIndex++;
         }
-        
+
     }
     else {
         graph->num_edges = 0;
         graph->edges = NULL;
     }
-    
+
     lcmtypes_graph_t_publish (lcm, "GRAPH", graph);
-    
+
     lcmtypes_graph_t_destroy (graph);
-    
+
     cout << "Publishing the tree -- end" << endl;
-    
+
     return 1;
 }
-
-
-
